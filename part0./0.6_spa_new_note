@@ -1,0 +1,15 @@
+note over browser:
+User fill input name of note and push the button
+end note
+note over browser:
+The js code prevent default of the button and call a method named redrawNotes().
+This method create a new note in browser before to send server 
+end note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+browser-->server: [{note:{content:"content", date:"date"}}]
+note over server:
+server receive de post data the content of note, and the date.
+Then push data into an array the data is not saved into a database only 
+in memory. The server send a response HTTP 201 and send message "note created"
+end note
+server-->browser: message: "note created"
