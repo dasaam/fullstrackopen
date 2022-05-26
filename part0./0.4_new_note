@@ -3,6 +3,7 @@ note over browser:
 User fill input name of note and push de submit button
 end note
 browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+browser-->server: note
 note over server:
 server receive de post data, name of note, date is generate automatically 
 and push data into an array the data is not saved into a database only 
