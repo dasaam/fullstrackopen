@@ -14,6 +14,14 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    
+    const personNames = persons.map(person => (person.name))
+    
+    if(personNames.indexOf(newName) != -1){
+      alert(`${newName} is already added to phonebook`);
+      return false;
+    }
+
     const personObject = {
       name: newName
     }
