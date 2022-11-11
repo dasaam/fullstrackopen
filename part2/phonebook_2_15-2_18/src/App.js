@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 
+
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('')
@@ -51,23 +52,36 @@ const App = () => {
     const personNames = persons.map(person => (person.name))
     
     if(personNames.indexOf(newName) != -1){
-      alert(`${newName} is already added to phonebook`);
-      return false;
-    }
-
-    const personObject = {
-      name: newName,
-      number: newNumber
-    }
-
-    personService
-    .create(personObject)
-    .then(returnedPerson  => {
-      console.log(returnedPerson)
-      setPersons(persons.concat(returnedPerson))
-      setNewName('')
-      setNewNumber('')
-    })
+      //alert(`${newName} is already added to phonebook`);
+      const person = persons.find(person => person.name === newName)
+  
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        
+        const changedPerson = { ...person, number: newNumber }
+        
+        personService
+        .update(person.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(personTemp => personTemp.id !== person.id ? personTemp : returnedPerson))
+        })
+      }else{
+        return false;
+      }
+    }else{
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+  
+      personService
+      .create(personObject)
+      .then(returnedPerson  => {
+        console.log(returnedPerson)
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+    } 
   }
 
   const handlePersonDelete = (id, e) => {
