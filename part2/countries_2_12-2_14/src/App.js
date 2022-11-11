@@ -26,19 +26,19 @@ const App = () => {
     console.log(event.target.value)
     setFilter(event.target.value)
   }
-  /*const oso = countries.map((country) =>{
-    return country.name.common
-  })*/
 
-  //console.log(oso);
   const countriesFilter = (filter == '') ? countries : countries.filter((country) => {
     return country.name.common.toLowerCase().indexOf(filter.toLowerCase()) !== -1
   })
 
+  const handleDetails = (country) => {
+    setFilter(country)
+  }
+
   return (
     <div>
       <Filter filter = { filter } handleFilterChange = { handleFilterChange} />
-      <Countries countriesFilter={countriesFilter} /> 
+      <Countries countriesFilter={countriesFilter} react={React} handleDetails={handleDetails}/> 
 
     </div>
   )

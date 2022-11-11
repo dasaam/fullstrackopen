@@ -1,5 +1,5 @@
 import Country from "./Country"
-const Countries = ({ countriesFilter}) => {
+const Countries = ({ countriesFilter, react, handleDetails }) => {
     if(countriesFilter.length > 10){
         return (
             <p>Too many matches, specifi another filter</p>
@@ -13,7 +13,10 @@ const Countries = ({ countriesFilter}) => {
             <ul>
               {
                   countriesFilter.map(country =>(
-                          <li key={country.area} >{ country.name.common }</li>
+                        <react.Fragment>
+                            <li key={country.area} >{ country.name.common }</li>
+                            <button onClick={() => handleDetails(country.name.common) }>{country.name.common}</button>
+                        </react.Fragment>
                       )
                   )
               }
