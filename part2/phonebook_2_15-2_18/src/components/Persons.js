@@ -1,10 +1,16 @@
 import Person from './Person'
-const Persons = ({personsFilter}) => {
+const Persons = ({personsFilter, handlePersonDelete, react}) => {
     return (
       <ul>
-        {personsFilter.map(person =>
-          <Person key={person.name} person={person} />
-        )}
+        {
+          personsFilter.map(person =>
+            <react.Fragment key={person.id}>
+              <Person person={person} />
+              <button onClick={() => handlePersonDelete(person.id) }>Delete</button>
+            </react.Fragment>
+
+          )
+        }
       </ul>
     )
   }
