@@ -12,6 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [typeNotificationMessage, setTypeNotificationMessage] = useState(null)
 
   const hook = () => {
     console.log('effect')
@@ -65,13 +66,26 @@ const App = () => {
         .update(person.id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(personTemp => personTemp.id !== person.id ? personTemp : returnedPerson))
-          
+          setNewName('')
+          setNewNumber('')
+
+          setTypeNotificationMessage('success')
           setNotificationMessage(
             `Updated ${newName} number`
           )
           setTimeout(() => {
             setNotificationMessage(null)
           }, 5000)
+        })
+        .catch(error => {
+          setTypeNotificationMessage('error')
+          setNotificationMessage(
+            `Information of ${newName} has already been removed from server`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+
         })
       }else{
         return false;
@@ -90,6 +104,7 @@ const App = () => {
         setNewName('')
         setNewNumber('')
 
+        setTypeNotificationMessage('success')
         setNotificationMessage(
           `Added ${newName}`
         )
@@ -117,7 +132,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} type={typeNotificationMessage} />
       <Filter filter = { filter } handleFilterChange = { handleFilterChange} />
       
       <h2>add a new</h2>
