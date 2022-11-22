@@ -84,7 +84,21 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const body = request.body
+  const body = request.body
+
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'name missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+    /*const body = request.body
   
     if (!body.name) {
       return response.status(400).json({ 
@@ -113,7 +127,7 @@ app.post('/api/persons', (request, response) => {
   
     persons = persons.concat(person)
   
-    response.json(person)
+    response.json(person)*/
 })
 
 
