@@ -121,12 +121,25 @@ app.post('/api/persons', (request, response) => {
     response.json(person)*/
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
+  const person = {
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
 
 app.get('/api/info', (request, response) => {
     console.log(generateId())
     response.send(`<p>Phonebook has info for ${persons.length} people</p>`+ new Date())
 })
+
 
 const generateId = () => {
     const newRandomId = Math.floor(Math.random() * 10000)
