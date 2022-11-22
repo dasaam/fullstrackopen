@@ -137,7 +137,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.get('/api/info', (request, response) => {
     console.log(generateId())
-    response.send(`<p>Phonebook has info for ${persons.length} people</p>`+ new Date())
+    response.send(`<p>Phonebook has info for ${persons.length} people </p>`+ new Date())
 })
 
 
