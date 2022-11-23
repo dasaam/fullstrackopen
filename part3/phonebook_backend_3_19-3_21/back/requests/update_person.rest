@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/persons/637e73adcac5dec556ec580d
+Content-Type: application/json
+
+{
+    "name":"ivan Daniel Sanchez amezcua",
+    "number": 4341001958
+}
