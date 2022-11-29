@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title":"Best practices in mongo db",
-    "author": "Daniel Sanchez",
-    "url": "www.daniel.com",
-    "likes": 1
+    "title":"Best practices node js",
+    "author": "Karla Sandoval",
+    "url": "www.karla.com",
+    "likes": 3
 }
