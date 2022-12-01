@@ -28,9 +28,31 @@ const favoriteBlog = (blogs) => {
 
     return mostBlog
 }
+
+const mostBlogs = (blogs) => {
+    const _ = require("lodash");
+
+    let bigger = 0;
+    let author;
+    _.forEach(_.countBy(blogs, 'author'), function(value, key) {
+        if(bigger < value){
+            bigger = value
+            author = key
+        }
+    });
+
+    const bestAuthor = {
+        "author": author,
+        "blogs": bigger
+    }
+
+    
+    return bestAuthor
+}
   
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
