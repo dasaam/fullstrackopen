@@ -59,14 +59,28 @@ test('blog without likes is not added', async () => {
     likes: 8
   }
 
-  await api
+  const savedBlog = await api
+  .post('/api/blogs')
+  .send(newNote)
+  .expect(200)
+
+  expect(savedBlog.body).toHaveProperty('likes')
+})
+
+test('blog without title, url is not added', async () => {
+  const newBlog = {
+    title: "core 6",
+    likes:5,
+    url:"www.google.com"
+  }
+
+  const savedBlog = await api
     .post('/api/blogs')
-    .send(newNote)
-    .expect(201)
+    .send(newBlog)
+    .expect(200)
 
-  const response = await helper.blogsInDb()
-
-  expect(newNote).toHaveProperty('likes')
+  expect(savedBlog.body).toHaveProperty('url')
+  expect(savedBlog.body).toHaveProperty('title')
 })
 
 afterAll(() => {
