@@ -53,6 +53,21 @@ test('a valid blog can be added', async () => {
   )
 })
 
+test('blog without likes is not added', async () => {
+  const newNote = {
+    title: "core 6",
+    likes: 8
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newNote)
+    .expect(201)
+
+  const response = await helper.blogsInDb()
+
+  expect(newNote).toHaveProperty('likes')
+})
 
 afterAll(() => {
   mongoose.connection.close()
