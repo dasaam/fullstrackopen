@@ -6,6 +6,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [typeNotification, setTypeNotification] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [newTitle, setNewTitle] = useState('') 
@@ -45,7 +46,8 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.log(exception)
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong username or password')
+      setTypeNotification('error')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -56,9 +58,10 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     setErrorMessage('Logout successfull')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+    setTypeNotification('success')
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
   }
 
   const addBlog = (event) => {
@@ -81,16 +84,22 @@ const App = () => {
       setNewAuthor('')
       setNewUrl('')
     })
+
+    setErrorMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+    setTypeNotification('success')
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
   
   }
 
-  const Notification = ({ message }) => {
+  const Notification = ({ message, typeNotification }) => {
     if (message === null) {
       return null
     }
   
     return (
-      <div className="error">
+      <div className={typeNotification}>
         {message}
       </div>
     )
@@ -121,7 +130,7 @@ const App = () => {
     
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification message={errorMessage} typeNotification={typeNotification} />
         <h1>Log in to application</h1>
         <form onSubmit={handleLogin}>
           <div>
@@ -150,7 +159,7 @@ const App = () => {
   
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} typeNotification={typeNotification} />
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={ handleLogout }>Logout</button></p> 
       { BlogForm() }
