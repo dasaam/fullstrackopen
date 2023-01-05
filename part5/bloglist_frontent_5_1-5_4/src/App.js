@@ -3,23 +3,14 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <div className="error">
-      {message}
-    </div>
-  )
-}
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
+  const [newTitle, setNewTitle] = useState('') 
+  const [newAuthor, setNewAuthor] = useState('') 
+  const [newUrl, setNewUrl] = useState('') 
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -70,6 +61,62 @@ const App = () => {
       }, 5000)
   }
 
+  const addBlog = (event) => {
+    event.preventDefault()
+    console.log('button clicked', event.target)
+
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      likes: 0
+    }
+
+    blogService
+    .create(blogObject)
+    .then(returnedBlog  => {
+      console.log(returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+    })
+  
+  }
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className="error">
+        {message}
+      </div>
+    )
+  }
+
+  const BlogForm = () => (
+    <form onSubmit={addBlog}>
+      <p>
+        <label>title</label>
+        <input type="text" name="title" value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
+      </p>
+      <p>
+        <label>author</label>
+        <input type="text" name="author" value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
+      </p>
+      <p>
+        <label>url</label>
+        <input type="text" name="url" value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
+      </p>
+      
+      <button type="submit">create</button>
+    </form>  
+  )
+
+
+
   if(user === null){
     
     return (
@@ -106,6 +153,7 @@ const App = () => {
       <Notification message={errorMessage} />
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={ handleLogout }>Logout</button></p> 
+      { BlogForm() }
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
