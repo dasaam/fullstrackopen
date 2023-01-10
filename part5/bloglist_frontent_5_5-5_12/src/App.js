@@ -9,8 +9,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [typeNotification, setTypeNotification] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
@@ -18,10 +18,10 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((a, b) => {
-          return b.likes  - a.likes;
-        }) 
+          return b.likes  - a.likes
+        })
       )
-    )  
+    )
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -41,7 +41,7 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
 
       blogService.setToken(user.token)
 
@@ -82,25 +82,20 @@ const App = () => {
     setTimeout(() => {
       setErrorMessage(null)
     }, 5000)
-  
   }
 
   const addLikeBlog = (updateBlog) => {
     const idToUpdate = updateBlog.id
 
     const update = {
-      "likes": updateBlog.likes,
+      'likes': updateBlog.likes,
     }
-    
     blogService
     .update(idToUpdate, update)
     .then(returnedBlog  => {
       console.log(returnedBlog)
-      
     })
-  
   }
-
   const destroyBlog = (destroyBlog) => {
 
     if(destroyBlog){
@@ -119,7 +114,6 @@ const App = () => {
     if (message === null) {
       return null
     }
-  
     return (
       <div className={typeNotification}>
         {message}
@@ -128,7 +122,6 @@ const App = () => {
   }
 
   if(user === null){
-    
     return (
       <div>
         <Notification message={errorMessage} typeNotification={typeNotification} />
@@ -153,23 +146,21 @@ const App = () => {
             />
           </div>
           <button type="submit">login</button>
-        </form>  
+        </form>
       </div>
     )
   }
-  
   return (
     <div>
       <Notification message={errorMessage} typeNotification={typeNotification} />
       <h2>blogs</h2>
-      <p>{user.name} logged in <button onClick={ handleLogout }>Logout</button></p> 
+      <p>{user.name} logged in <button onClick={ handleLogout }>Logout</button></p>
       <Togglable buttonLabel="new note" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}  updateBlog={addLikeBlog} destroyBlog={destroyBlog} />
       )}
-      
     </div>
   )
 }
