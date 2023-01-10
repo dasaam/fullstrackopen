@@ -101,6 +101,20 @@ const App = () => {
   
   }
 
+  const destroyBlog = (destroyBlog) => {
+
+    if(destroyBlog){
+      const idToDestroy = destroyBlog.id
+
+      blogService
+      .destroy(idToDestroy)
+      .then(returnedBlog  => {
+        console.log(returnedBlog)
+        setBlogs(blogs.filter(n => n.id !== idToDestroy))
+      })
+    }
+  }
+
   const Notification = ({ message, typeNotification }) => {
     if (message === null) {
       return null
@@ -153,7 +167,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}  updateBlog={addLikeBlog} />
+        <Blog key={blog.id} blog={blog}  updateBlog={addLikeBlog} destroyBlog={destroyBlog} />
       )}
       
     </div>
