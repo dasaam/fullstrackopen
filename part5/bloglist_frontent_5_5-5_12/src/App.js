@@ -82,6 +82,22 @@ const App = () => {
   
   }
 
+  const addLikeBlog = (updateBlog) => {
+    const idToUpdate = updateBlog.id
+
+    const update = {
+      "likes": updateBlog.likes,
+    }
+    
+    blogService
+    .update(idToUpdate, update)
+    .then(returnedBlog  => {
+      console.log(returnedBlog)
+      
+    })
+  
+  }
+
   const Notification = ({ message, typeNotification }) => {
     if (message === null) {
       return null
@@ -134,7 +150,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog}  updateBlog={addLikeBlog} />
       )}
       
     </div>
