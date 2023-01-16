@@ -54,12 +54,25 @@ describe('Blog app', function() {
       cy.get('#title').type('title by cypress')      
       cy.get('#author').type('author by cypress')      
       cy.get('#url').type('a blog url created by cypress')      
-
       cy.get('#create-button').click()      
+
       cy.get('.success')
       .should('contain', 'a new blog title by cypress by author by cypress added')
       .and('have.css', 'color', 'rgb(0, 128, 0)')
       .and('have.css', 'border-style', 'solid') 
+    })
+
+    it('a user press like button', function() {
+
+      cy.contains('new note').click()      
+      cy.get('#title').type('title by cypress')      
+      cy.get('#author').type('author by cypress')      
+      cy.get('#url').type('a blog url created by cypress')      
+      cy.get('#create-button').click()   
+      
+      cy.get('#view-button').click()  
+      cy.get('#like-button').click()  
+
     })
   })
 })
