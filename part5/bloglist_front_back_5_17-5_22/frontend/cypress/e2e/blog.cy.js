@@ -43,4 +43,23 @@ describe('Blog app', function() {
       cy.get('html').should('not.contain', 'Superuser logged in')
     })
   })
+
+  describe.only('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'root', password: 'salainen' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new note').click()      
+      cy.get('#title').type('title by cypress')      
+      cy.get('#author').type('author by cypress')      
+      cy.get('#url').type('a blog url created by cypress')      
+
+      cy.get('#create-button').click()      
+      cy.get('.success')
+      .should('contain', 'a new blog title by cypress by author by cypress added')
+      .and('have.css', 'color', 'rgb(0, 128, 0)')
+      .and('have.css', 'border-style', 'solid') 
+    })
+  })
 })
