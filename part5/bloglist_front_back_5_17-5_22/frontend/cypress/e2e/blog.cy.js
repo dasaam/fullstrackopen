@@ -70,9 +70,21 @@ describe('Blog app', function() {
       cy.get('#url').type('a blog url created by cypress')      
       cy.get('#create-button').click()   
       
-      cy.get('#view-button').click()  
+      cy.contains('view').click() 
       cy.get('#like-button').click()  
 
+    })
+
+    it('a user remove blogs', function() {
+
+      cy.contains('new note').click()      
+      cy.get('#title').type('title by cypress')      
+      cy.get('#author').type('author by cypress')      
+      cy.get('#url').type('a blog url created by cypress')      
+      cy.get('#create-button').click()   
+      
+      cy.contains('view').click() 
+      cy.contains('remove').click()      
     })
   })
 })
