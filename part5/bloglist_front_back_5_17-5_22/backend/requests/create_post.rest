@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBob3RvbWFuIiwiaWQiOiI2M2I1YTdkMDAzMzI2NGRiNDFhYmU0NjYiLCJpYXQiOjE2NzI4NDk0MDl9.oUBP8M-q0_7Yijd4shdihWvntA6OfiWhM6cuDbwIkVs
+
+{
+    "title":"Post de photoman",
+    "author": "Daniel",
+    "url": "www.daniel.com",
+    "likes": 7
+}
