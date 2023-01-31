@@ -14,6 +14,8 @@ const anecdoteReducer = (state = [], action) => {
         votes: anecdoteToChange.votes + 1 
       }
 
+      anecdoteService.update(id, changedAnecdote)
+
       return state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote )
     case 'INIT_ANECDOTES':      
       return action.data
