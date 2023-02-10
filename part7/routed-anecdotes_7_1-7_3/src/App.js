@@ -74,16 +74,22 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
+
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+    
+    navigate('/')
+
   }
 
   return (
@@ -126,6 +132,8 @@ const App = () => {
       id: 2
     }
   ])
+
+
 
   const [notification, setNotification] = useState('')
 
