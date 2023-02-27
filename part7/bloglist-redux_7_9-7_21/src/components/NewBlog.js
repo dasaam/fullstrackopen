@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+const BlogForm = () => {
+  const dispatch = useDispatch()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await createBlog({ title, author, url })
+
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
+    const likes = 0
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
+
+    dispatch(createBlog({ title, author, url, likes }))
   }
 
   return (
@@ -20,8 +28,7 @@ const BlogForm = ({ createBlog }) => {
           <input
             id='title'
             placeholder='title'
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
+            name='title'
           />
         </div>
         <div>
@@ -29,8 +36,7 @@ const BlogForm = ({ createBlog }) => {
           <input
             id='author'
             placeholder='author'
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
+            name='author'
           />
         </div>
         <div>
@@ -38,8 +44,7 @@ const BlogForm = ({ createBlog }) => {
           <input
             id='url'
             placeholder='url'
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
+            name='url'
           />
         </div>
         <button type="submit">create</button>
