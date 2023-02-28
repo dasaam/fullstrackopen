@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-import loginService from './services/login'
-import storageService from './services/storage'
+//import loginService from './services/login'
+//import storageService from './services/storage'
 
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
@@ -11,6 +11,8 @@ import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeLogin } from './reducers/loginReducer'
+import { logout } from './reducers/loginReducer'
 import { updateBlog } from './reducers/blogReducer'
 import { removeBlog } from './reducers/blogReducer'
 
@@ -19,20 +21,23 @@ const App = () => {
   const dispatch = useDispatch()
 
   //const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState('')
+  //const [user, setUser] = useState('')
 
   const blogFormRef = useRef()
 
   useEffect(() => {
-    const user = storageService.loadUser()
-    setUser(user)
-  }, [])
+    //const user = storageService.loadUser()
+    //setUser(user)
+    dispatch(initializeLogin())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.login)
+
 
   //const byLikes = (b1, b2) => b2.likes - b1.likes
 
@@ -44,20 +49,21 @@ const App = () => {
     }, 3000)
   }
 
-  const login = async (username, password) => {
+  /*const login = async (username, password) => {
+
     try {
-      const user = await loginService.login({ username, password })
-      setUser(user)
+      //const user = await loginService.login({ username, password })
+      //setUser(user)
       storageService.saveUser(user)
       notifyWith('welcome!')
     } catch(e) {
       notifyWith('wrong username or password', 'error')
     }
-  }
+  }*/
 
-  const logout = async () => {
-    setUser(null)
-    storageService.removeUser()
+  const logoutBlog = async () => {
+    //setUser(null)
+    dispatch(logout())
     notifyWith('logged out')
   }
 
@@ -91,7 +97,7 @@ const App = () => {
       <div>
         <h2>log in to application</h2>
         <Notification />
-        <LoginForm login={login} />
+        <LoginForm notifyWith={notifyWith} />
       </div>
     )
   }
@@ -103,7 +109,7 @@ const App = () => {
       <Notification />
       <div>
         {user.name} logged in
-        <button onClick={logout}>logout</button>
+        <button onClick={logoutBlog}>logout</button>
       </div>
       <Togglable buttonLabel='new note' ref={blogFormRef}>
         <NewBlog createBlog={createBlog} />
