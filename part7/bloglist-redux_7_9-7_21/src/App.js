@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-//import loginService from './services/login'
-//import storageService from './services/storage'
-
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
@@ -15,6 +12,32 @@ import { initializeLogin } from './reducers/loginReducer'
 import { logout } from './reducers/loginReducer'
 import { updateBlog } from './reducers/blogReducer'
 import { removeBlog } from './reducers/blogReducer'
+import _ from 'lodash'
+
+
+import {
+  //BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  /*Navigate,
+  useParams,
+  useNavigate,
+  useMatch*/
+} from 'react-router-dom'
+
+const Menu = () => {
+  const padding = {
+    marginTop: 10,
+    paddingRight: 10
+  }
+  return (
+    <div>
+      <Link style={padding} to="/">blogs</Link>
+      <Link style={padding} to="/users">users</Link>
+    </div>
+  )
+}
 
 const App = () => {
 
@@ -37,9 +60,6 @@ const App = () => {
 
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.login)
-
-
-  //const byLikes = (b1, b2) => b2.likes - b1.likes
 
   const notifyWith = (message, typeMessage = 'info') => {
     dispatch(handleNotification(message, typeMessage))
@@ -67,12 +87,12 @@ const App = () => {
     notifyWith('logged out')
   }
 
-  const createBlog = async (newBlog) => {
+  /*const createBlog = async (newBlog) => {
     //const createdBlog = await blogService.create(newBlog)
     notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
     //setBlogs(blogs.concat(createdBlog))
     blogFormRef.current.toggleVisibility()
-  }
+  }*/
 
   const like = async (blog) => {
     const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
@@ -102,18 +122,8 @@ const App = () => {
     )
   }
 
-
-  return (
+  const BlogList = () => (
     <div>
-      <h2>blogs</h2>
-      <Notification />
-      <div>
-        {user.name} logged in
-        <button onClick={logoutBlog}>logout</button>
-      </div>
-      <Togglable buttonLabel='new note' ref={blogFormRef}>
-        <NewBlog createBlog={createBlog} />
-      </Togglable>
       <div>
         {blogs.map(blog =>
           <Blog
@@ -125,6 +135,54 @@ const App = () => {
           />
         )}
       </div>
+    </div>
+  )
+
+  const UserList = () => {
+
+    let users = _.countBy(blogs, 'author')
+
+    let usersArray = []
+    _.mapKeys(users, function(value, key) {
+      usersArray.push(key + ':' + value)
+    })
+
+    return (
+
+      <div>
+        <h1>Users</h1>
+          <ul>
+          {
+          usersArray.map(blog =>
+            <li key={blog}>
+              {blog}
+            </li>
+          )
+          }
+          </ul>
+      </div>
+    )
+  }
+
+
+  return (
+    <div>
+      <h2>blogs</h2>
+      <Notification />
+      <div>
+        {user.name} logged in
+        <button onClick={logoutBlog}>logout</button>
+      </div>
+      <Togglable buttonLabel='new note' ref={blogFormRef}>
+        <NewBlog notifyWith={notifyWith} />
+      </Togglable>
+
+      <Menu />
+
+      <Routes>
+        <Route path="/users" element={<UserList />} />
+        <Route path="/" element={  <BlogList /> } />
+      </Routes>
     </div>
   )
 }

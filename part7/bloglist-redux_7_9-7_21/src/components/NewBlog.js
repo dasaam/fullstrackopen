@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = () => {
+const BlogForm = ({ notifyWith }) => {
   const dispatch = useDispatch()
 
   const handleSubmit = async (event) => {
@@ -16,6 +16,7 @@ const BlogForm = () => {
     event.target.url.value = ''
 
     dispatch(createBlog({ title, author, url, likes }))
+    notifyWith(`A new blog '${title}' by '${author}' added`)
   }
 
   return (
