@@ -9,10 +9,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { handleNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeLogin } from './reducers/loginReducer'
+import { initializeUsers } from './reducers/userReducer'
 import { logout } from './reducers/loginReducer'
 import { updateBlog } from './reducers/blogReducer'
 import { removeBlog } from './reducers/blogReducer'
-import _ from 'lodash'
+//import _ from 'lodash'
 
 
 import {
@@ -22,8 +23,8 @@ import {
   Link,
   /*Navigate,
   useParams,
-  useNavigate,
-  useMatch*/
+  useNavigate,*/
+  useMatch
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -39,6 +40,47 @@ const Menu = () => {
   )
 }
 
+const User = ({ user }) => {
+  if (!user) {
+    return null
+  }
+  return (
+    <div>
+        <h1>{user.name}</h1>
+        <h2>Added blogs</h2>
+        <ul>
+          {
+            user.blogs.map(blog =>
+              <li key={blog.id}>
+                {blog.title}
+              </li>
+            )
+          }
+        </ul>
+    </div>
+  )
+}
+
+const UserList = () => {
+  const users = useSelector(state => state.user)
+  return (
+
+    <div>
+      <h1>Users</h1>
+        <ul>
+        {
+          users.map(user =>
+            <li key={user.id}>
+              <Link to={`/users/${user.id}`}>{ user.name }</Link> : {user.blogs.length}
+            </li>
+          )
+        }
+        </ul>
+    </div>
+  )
+}
+
+
 const App = () => {
 
   const dispatch = useDispatch()
@@ -49,8 +91,6 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    //const user = storageService.loadUser()
-    //setUser(user)
     dispatch(initializeLogin())
   }, [dispatch])
 
@@ -58,8 +98,19 @@ const App = () => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [dispatch])
+
   const blogs = useSelector(state => state.blogs)
-  const user = useSelector(state => state.login)
+  const userLogin = useSelector(state => state.login)
+  const users = useSelector(state => state.user)
+
+  const match = useMatch('/users/:id')
+  const user = match
+  ? users.find(user => user.id === match.params.id)
+  : null
+  //const oso = users.find(user => console.log(user.id))
 
   const notifyWith = (message, typeMessage = 'info') => {
     dispatch(handleNotification(message, typeMessage))
@@ -112,7 +163,7 @@ const App = () => {
 
   }
 
-  if (!user) {
+  if (!userLogin) {
     return (
       <div>
         <h2>log in to application</h2>
@@ -138,31 +189,6 @@ const App = () => {
     </div>
   )
 
-  const UserList = () => {
-
-    let users = _.countBy(blogs, 'author')
-
-    let usersArray = []
-    _.mapKeys(users, function(value, key) {
-      usersArray.push(key + ':' + value)
-    })
-
-    return (
-
-      <div>
-        <h1>Users</h1>
-          <ul>
-          {
-          usersArray.map(blog =>
-            <li key={blog}>
-              {blog}
-            </li>
-          )
-          }
-          </ul>
-      </div>
-    )
-  }
 
 
   return (
@@ -170,7 +196,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div>
-        {user.name} logged in
+        {userLogin.name} logged in
         <button onClick={logoutBlog}>logout</button>
       </div>
       <Togglable buttonLabel='new note' ref={blogFormRef}>
@@ -180,6 +206,7 @@ const App = () => {
       <Menu />
 
       <Routes>
+        <Route path="/users/:id" element={<User user={user} />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/" element={  <BlogList /> } />
       </Routes>
