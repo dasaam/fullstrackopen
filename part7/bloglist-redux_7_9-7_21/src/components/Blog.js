@@ -1,27 +1,63 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSelector, useDispatch } from 'react-redux'
+import { useMatch } from 'react-router-dom'
+import { updateBlog } from '../reducers/blogReducer'
+import { removeBlog } from '../reducers/blogReducer'
+import { handleNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ blog, like, canRemove, remove }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = () => {
+  const dispatch = useDispatch()
 
-  const style = {
-    marginBottom: 2,
-    padding: 5,
-    borderStyle: 'solid'
+  const blogs = useSelector(state => state.blogs)
+  const userLogin = useSelector(state => state.login)
+
+  const match = useMatch('/blogs/:id')
+  const blog = match
+  ? blogs.find(blog => blog.id === match.params.id)
+  : null
+
+  if (!blog) {
+    return null
+  }
+
+
+  const notifyWith = (message, typeMessage = 'info') => {
+    dispatch(handleNotification(message, typeMessage))
+
+    setTimeout(() => {
+      dispatch(handleNotification('', ''))
+    }, 3000)
+  }
+
+  const canRemove = () => {
+    return userLogin && blog.user.username===userLogin.username
+  }
+
+  const like = async (blog) => {
+    const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+    dispatch(updateBlog(blogToUpdate))
+    notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`)
+  }
+
+  const remove = async (blog) => {
+    const ok = window.confirm(`Sure you want to remove '${blog.title}' by ${blog.author}`)
+    if (ok) {
+      //await blogService.remove(blog.id)
+      dispatch(removeBlog(blog.id))
+      notifyWith(`The blog' ${blog.title}' by '${blog.author} removed`)
+      //setBlogs(blogs.filter(b => b.id !== blog.id))
+    }
   }
 
   return (
-    <div style={style} className='blog'>
-      {blog.title} {blog.author}
-      <button onClick={() => setVisible(!visible)}>
-        {visible ? 'hide' : 'show'}
-      </button>
-      {visible&&
+    <div>
+      {
         <div>
+          <h1>{ blog.title }</h1>
           <div> <a href={blog.url}> {blog.url}</a> </div>
-          <div>likes {blog.likes} <button onClick={like}>like</button></div>
-          <div>{blog.user && blog.user.name}</div>
-          {canRemove&&<button onClick={remove}>delete</button>}
+          <div>{blog.likes} likes <button onClick={() => like(blog)}>like</button></div>
+          <div>added by {blog.user && blog.user.name}</div>
+          {canRemove&&<button onClick={() => remove(blog)}>delete</button>}
         </div>
       }
     </div>
@@ -29,8 +65,6 @@ const Blog = ({ blog, like, canRemove, remove }) => {
 }
 
 Blog.propTypes = {
-  like: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
   canRemove: PropTypes.bool,
   blog: PropTypes.shape({
     title: PropTypes.string,
