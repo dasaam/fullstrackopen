@@ -1,12 +1,19 @@
 //import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/loginReducer'
+import { handleNotification } from '../reducers/notificationReducer'
 
 
-const LoginForm = ({ notifyWith }) => {
+const LoginForm = () => {
   const dispatch = useDispatch()
-  //const [username, setUsername] = useState('')
-  //const [password, setPassword] = useState('')
+
+  const notifyWith = (message, typeMessage = 'info') => {
+    dispatch(handleNotification(message, typeMessage))
+
+    setTimeout(() => {
+      dispatch(handleNotification('', ''))
+    }, 3000)
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()

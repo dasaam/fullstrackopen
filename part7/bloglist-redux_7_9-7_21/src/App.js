@@ -7,38 +7,23 @@ import Togglable from './components/Togglable'
 import User from './components/User'
 import UserList from './components/Users'
 import BlogList from './components/Blogs'
+import Menu from './components/Menu'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { handleNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeLogin } from './reducers/loginReducer'
 import { initializeUsers } from './reducers/userReducer'
-import { logout } from './reducers/loginReducer'
-
 
 
 import {
   //BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   /*Navigate,
   useParams,
   useNavigate,*/
 } from 'react-router-dom'
-
-const Menu = () => {
-  const padding = {
-    marginTop: 10,
-    paddingRight: 10
-  }
-  return (
-    <div>
-      <Link style={padding} to="/">blogs</Link>
-      <Link style={padding} to="/users">users</Link>
-    </div>
-  )
-}
 
 const App = () => {
   const dispatch = useDispatch()
@@ -68,13 +53,6 @@ const App = () => {
   }
 
 
-  const logoutBlog = async () => {
-    //setUser(null)
-    dispatch(logout())
-    notifyWith('logged out')
-  }
-
-
 
   if (!userLogin) {
     return (
@@ -89,20 +67,16 @@ const App = () => {
 
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
-      <div>
-        {userLogin.name} logged in
-        <button onClick={logoutBlog}>logout</button>
-      </div>
+    <div className='container'>
+      <Menu />
+      <h2>blog app</h2>
+
       <Togglable buttonLabel='new note' ref={blogFormRef}>
-        <NewBlog notifyWith={notifyWith} />
+        <NewBlog notifyWith={notifyWith} className='mb-2' />
       </Togglable>
 
-      <Menu />
-
       <Routes>
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/blogs/:id" element={<Blog />} />
         <Route path="/users/:id" element={<User />} />
         <Route path="/users" element={<UserList />} />
