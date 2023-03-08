@@ -21,12 +21,18 @@ import blogService from '../services/blogs'
       deleteBlog(state, action) {
         const id = action.payload
         return state.filter(blog => blog.id !== id)
+      },
+      appendComment(state, action) {
 
+        const id = action.payload.id
+        return state.map(blog =>
+          blog.id !== id ? blog : action.payload
+      )
       },
     },
 })
 
-export const { appendBlog, setBlogs, editBlog, deleteBlog } = blogSlice.actions
+export const { appendBlog, setBlogs, editBlog, deleteBlog, appendComment } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -55,6 +61,13 @@ export const removeBlog = id => {
   return async dispatch => {
     await blogService.remove(id)
     dispatch(deleteBlog(id))
+  }
+}
+
+export const createComment = content => {
+  return async dispatch => {
+    const newCommentBlog = await blogService.createComment(content)
+    dispatch(appendComment(newCommentBlog))
   }
 }
 

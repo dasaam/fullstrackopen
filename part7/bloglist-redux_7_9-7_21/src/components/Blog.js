@@ -4,6 +4,7 @@ import { useMatch } from 'react-router-dom'
 import { updateBlog } from '../reducers/blogReducer'
 import { removeBlog } from '../reducers/blogReducer'
 import { handleNotification } from '../reducers/notificationReducer'
+import Comment from '../components/Comment'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -59,10 +60,11 @@ const Blog = () => {
           <div>added by {blog.user && blog.user.name}</div>
           {canRemove&&<button onClick={() => remove(blog)}>delete</button>}
           <h3>Comments</h3>
+          <Comment />
           <ul>
             {
               blog.comments.map(comment =>
-                <li key={blog.id}>
+                <li key={blog.id + comment}>
                   { comment }
                 </li>
               )
