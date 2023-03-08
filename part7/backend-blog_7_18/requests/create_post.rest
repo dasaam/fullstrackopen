@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzZmZjYzIxOTZmODQwMDhlNjU4ZmIzNiIsImlhdCI6MTY3NzcwODM4Mn0.vNh0LEyqB0Pa1RKVHR1gy0KKOzIMgX8TAu9x6GACgtk
+
+{
+    "title":"Post de karla",
+    "author": "karla",
+    "url": "www.karla.com",
+    "likes": 7
+}

@@ -58,6 +58,16 @@ const Blog = () => {
           <div>{blog.likes} likes <button onClick={() => like(blog)}>like</button></div>
           <div>added by {blog.user && blog.user.name}</div>
           {canRemove&&<button onClick={() => remove(blog)}>delete</button>}
+          <h3>Comments</h3>
+          <ul>
+            {
+              blog.comments.map(comment =>
+                <li key={blog.id}>
+                  { comment }
+                </li>
+              )
+            }
+          </ul>
         </div>
       }
     </div>
